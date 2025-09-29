@@ -3,6 +3,10 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../components/AuthContext";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import Select from "../../components/Select";
+import Checkbox from "../../components/Checkbox";
 
 export default function SignupPage() {
   const { signup } = useAuth();
@@ -79,55 +83,39 @@ export default function SignupPage() {
 
           <div className="mt-6 rounded-2xl border border-black/10 dark:border-white/10 p-6">
             <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Full name</label>
-            <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.name ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="text" value={name} onChange={(e)=>setName(e.target.value)} />
-            {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Email</label>
-            <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.email ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
-          </div>
+          <Input label="Full name" value={name} onChange={(e)=>setName(e.target.value)} error={errors.name} wrapperClassName="sm:col-span-1" />
+          <Input label="Email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} error={errors.email} wrapperClassName="sm:col-span-1" />
 
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Date of birth (optional)</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" type="date" value={dob} onChange={(e)=>setDob(e.target.value)} />
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Gender (optional)</label>
-            <select className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={gender} onChange={(e)=>setGender(e.target.value)}>
-              <option value="">Select…</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="nonbinary">Non-binary</option>
-              <option value="other">Other</option>
-              <option value="prefer_not">Prefer not to say</option>
-            </select>
-          </div>
+                  <Input label="Date of birth (optional)" type="date" value={dob} onChange={(e)=>setDob(e.target.value)} wrapperClassName="sm:col-span-1" />
+                  <Select
+                    label="Gender (optional)"
+                    value={gender}
+                    onChange={(e)=>setGender(e.target.value)}
+                    wrapperClassName="sm:col-span-1"
+                    options={[
+                      { value: "", label: "Select…" },
+                      { value: "female", label: "Female" },
+                      { value: "male", label: "Male" },
+                      { value: "nonbinary", label: "Non-binary" },
+                      { value: "other", label: "Other" },
+                      { value: "prefer_not", label: "Prefer not to say" }
+                    ]}
+                  />
 
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Password</label>
-            <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.password ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="password" value={password} onChange={(e)=>setPassword(e.target.value)} />
-            {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Confirm password</label>
-            <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.confirm ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="password" value={confirm} onChange={(e)=>setConfirm(e.target.value)} />
-            {errors.confirm && <p className="mt-1 text-xs text-red-600">{errors.confirm}</p>}
-          </div>
+          <Input label="Password" type="password" value={password} onChange={(e)=>setPassword(e.target.value)} error={errors.password} wrapperClassName="sm:col-span-1" />
+          <Input label="Confirm password" type="password" value={confirm} onChange={(e)=>setConfirm(e.target.value)} error={errors.confirm} wrapperClassName="sm:col-span-1" />
 
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Phone (optional)</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" type="tel" value={phone} onChange={(e)=>setPhone(e.target.value)} />
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm font-medium">Role</label>
-            <select className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={role} onChange={(e)=>setRole(e.target.value)}>
-              <option value="patient">Patient</option>
-              <option value="doctor">Doctor</option>
-            </select>
-          </div>
+          <Input label="Phone (optional)" type="tel" value={phone} onChange={(e)=>setPhone(e.target.value)} wrapperClassName="sm:col-span-1" />
+                  <Select
+                    label="Role"
+                    value={role}
+                    onChange={(e)=>setRole(e.target.value)}
+                    wrapperClassName="sm:col-span-1"
+                    options={[
+                      { value: "patient", label: "Patient" },
+                      { value: "doctor", label: "Doctor" }
+                    ]}
+                  />
 
           {role === "doctor" && (
             <>
@@ -141,58 +129,38 @@ export default function SignupPage() {
                 <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.licenseId ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="text" placeholder="e.g., NPI / State license" value={licenseId} onChange={(e)=>setLicenseId(e.target.value)} />
                 {errors.licenseId && <p className="mt-1 text-xs text-red-600">{errors.licenseId}</p>}
               </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium">Clinic/Organization (optional)</label>
-                <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" type="text" placeholder="Clinic name" value={clinic} onChange={(e)=>setClinic(e.target.value)} />
-              </div>
+              <Input label="Clinic/Organization (optional)" value={clinic} onChange={(e)=>setClinic(e.target.value)} wrapperClassName="sm:col-span-2" />
             </>
           )}
 
           <div className="sm:col-span-2 mt-2">
             <h4 className="text-sm font-medium">Address (optional)</h4>
           </div>
-          <div className="sm:col-span-2">
-            <label className="block text-sm">Address line 1</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={address1} onChange={(e)=>setAddress1(e.target.value)} />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="block text-sm">Address line 2</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={address2} onChange={(e)=>setAddress2(e.target.value)} />
-          </div>
-          <div className="sm:col-span-2 md:col-span-1">
-            <label className="block text-sm">City</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={city} onChange={(e)=>setCity(e.target.value)} />
-          </div>
-          <div className="sm:col-span-2 md:col-span-1">
-            <label className="block text-sm">State/Province</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={stateProv} onChange={(e)=>setStateProv(e.target.value)} />
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm">Postal code</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={zip} onChange={(e)=>setZip(e.target.value)} />
-          </div>
-          <div className="sm:col-span-1">
-            <label className="block text-sm">Country</label>
-            <input className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 px-3 py-2" value={country} onChange={(e)=>setCountry(e.target.value)} />
-          </div>
+          <Input label="Address line 1" value={address1} onChange={(e)=>setAddress1(e.target.value)} wrapperClassName="sm:col-span-2" />
+          <Input label="Address line 2" value={address2} onChange={(e)=>setAddress2(e.target.value)} wrapperClassName="sm:col-span-2" />
+          <Input label="City" value={city} onChange={(e)=>setCity(e.target.value)} wrapperClassName="sm:col-span-2 md:col-span-1" />
+          <Input label="State/Province" value={stateProv} onChange={(e)=>setStateProv(e.target.value)} wrapperClassName="sm:col-span-2 md:col-span-1" />
+          <Input label="Postal code" value={zip} onChange={(e)=>setZip(e.target.value)} wrapperClassName="sm:col-span-1" />
+          <Input label="Country" value={country} onChange={(e)=>setCountry(e.target.value)} wrapperClassName="sm:col-span-1" />
 
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={agree} onChange={(e)=>setAgree(e.target.checked)} />
-              I agree to the <a href="#" className="underline">Terms</a> and <a href="#" className="underline">Privacy Policy</a>.
-            </label>
-            {errors.agree && <p className="mt-1 text-xs text-red-600">{errors.agree}</p>}
-          </div>
+                  <div className="sm:col-span-2">
+                    <Checkbox
+                      label="I agree to the Terms and Privacy Policy."
+                      checked={agree}
+                      onChange={(e)=>setAgree(e.target.checked)}
+                      error={errors.agree}
+                    />
+                  </div>
 
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={newsletter} onChange={(e)=>setNewsletter(e.target.checked)} />
-              Send me product updates and clinical insights (optional)
-            </label>
-          </div>
+                  <Checkbox
+                    label="Send me product updates and clinical insights (optional)"
+                    checked={newsletter}
+                    onChange={(e)=>setNewsletter(e.target.checked)}
+                    wrapperClassName="sm:col-span-2"
+                  />
 
           <div className="sm:col-span-2 flex items-center gap-3">
-            <button type="submit" className="inline-flex items-center rounded-md bg-black text-white dark:bg-white dark:text-black px-5 py-3 text-sm font-medium">Create account</button>
+            <Button type="submit">Create account</Button>
             <a href="/login" className="text-sm underline">Have an account? Log in</a>
           </div>
         </form>

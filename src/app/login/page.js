@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import Select from "../../components/Select";
+import Checkbox from "../../components/Checkbox";
 import { useAuth } from "../../components/AuthContext";
 
 export default function LoginPage() {
@@ -63,11 +67,7 @@ export default function LoginPage() {
             </div>
           </div>
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
-            <div>
-              <label className="block text-sm font-medium">Email</label>
-              <input className={`mt-1 w-full rounded-md border px-3 py-2 ${errors.email ? "border-red-500" : "border-black/10 dark:border-white/15"}`} type="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
-              {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email}</p>}
-            </div>
+            <Input label="Email" type="email" value={email} onChange={(e)=>setEmail(e.target.value)} error={errors.email} />
             <div>
               <label className="block text-sm font-medium">Password</label>
               <div className="mt-1 relative">
@@ -87,22 +87,25 @@ export default function LoginPage() {
                 </button>
               </div>
               {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password}</p>}
-              <div className="mt-2 flex items-center justify-between text-xs">
-                <label className="inline-flex items-center gap-2">
-                  <input type="checkbox" checked={remember} onChange={(e)=>setRemember(e.target.checked)} />
-                  Remember me
-                </label>
-                <a href="#" className="underline">Forgot password?</a>
-              </div>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <Checkbox
+                      label="Remember me"
+                      checked={remember}
+                      onChange={(e)=>setRemember(e.target.checked)}
+                    />
+                    <a href="#" className="underline">Forgot password?</a>
+                  </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium">Role</label>
-              <select className="mt-1 w-full rounded-md border border-black/10 dark:border-white/15 bg-transparent px-3 py-2" value={role} onChange={(e)=>setRole(e.target.value)}>
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-              </select>
-            </div>
-            <button type="submit" className="inline-flex items-center rounded-md bg-black text-white dark:bg-white dark:text-black px-5 py-3 text-sm font-medium w-fit">{mode === "login" ? "Login" : "Continue to Signup"}</button>
+                <Select
+                  label="Role"
+                  value={role}
+                  onChange={(e)=>setRole(e.target.value)}
+                  options={[
+                    { value: "patient", label: "Patient" },
+                    { value: "doctor", label: "Doctor" }
+                  ]}
+                />
+            <Button type="submit">{mode === "login" ? "Login" : "Continue to Signup"}</Button>
           </form>
         </div>
       </div>
