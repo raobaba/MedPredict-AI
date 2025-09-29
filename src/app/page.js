@@ -60,6 +60,70 @@ export default function Home() {
       </section>
 
       <section className="mt-20">
+        <div className="flex items-center justify-between gap-6">
+          <h2 className="text-2xl sm:text-3xl font-semibold">For Doctors</h2>
+          <a href="/pricing" className="hidden sm:inline-flex items-center rounded-md border border-black/10 dark:border-white/15 px-4 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5">Explore Plans</a>
+        </div>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-xl border border-black/10 dark:border-white/10 p-6">
+            <h3 className="font-semibold">Patient Risk Stratification</h3>
+            <p className="mt-2 text-sm text-black/70 dark:text-white/70">Panel-wide risk scores with explanations and confidence intervals.</p>
+          </div>
+          <div className="rounded-xl border border-black/10 dark:border-white/10 p-6">
+            <h3 className="font-semibold">Care Pathway Suggestions</h3>
+            <p className="mt-2 text-sm text-black/70 dark:text-white/70">Guideline-based recommendations embedded in clinical workflows.</p>
+          </div>
+          <div className="rounded-xl border border-black/10 dark:border-white/10 p-6">
+            <h3 className="font-semibold">In-basket Alerts</h3>
+            <p className="mt-2 text-sm text-black/70 dark:text-white/70">Timely flags for deterioration, med adherence, and follow-ups.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-20 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 p-6">
+          <h3 className="text-xl font-semibold">Clinical workflow</h3>
+          <ol className="mt-4 space-y-3 text-sm">
+            <li className="flex items-start gap-3"><span className="h-6 w-6 flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black text-xs">1</span><span>Connect EHR data via FHIR/HL7</span></li>
+            <li className="flex items-start gap-3"><span className="h-6 w-6 flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black text-xs">2</span><span>Run risk models and surface insights in the chart</span></li>
+            <li className="flex items-start gap-3"><span className="h-6 w-6 flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black text-xs">3</span><span>Trigger tasks, referrals, and patient outreach</span></li>
+            <li className="flex items-start gap-3"><span className="h-6 w-6 flex items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black text-xs">4</span><span>Measure outcomes, iterate models, close the loop</span></li>
+          </ol>
+        </div>
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 p-6">
+          <h3 className="text-xl font-semibold">Clinical metrics</h3>
+          <div className="mt-4 grid grid-cols-2 gap-4 text-center">
+            <div className="rounded-lg border border-black/10 dark:border-white/10 p-4">
+              <div className="text-3xl font-bold">12%</div>
+              <div className="text-xs text-black/70 dark:text-white/70">Readmission reduction</div>
+            </div>
+            <div className="rounded-lg border border-black/10 dark:border-white/10 p-4">
+              <div className="text-3xl font-bold">18%</div>
+              <div className="text-xs text-black/70 dark:text-white/70">ED revisit reduction</div>
+            </div>
+            <div className="rounded-lg border border-black/10 dark:border-white/10 p-4">
+              <div className="text-3xl font-bold">25%</div>
+              <div className="text-xs text-black/70 dark:text-white/70">No-show decrease</div>
+            </div>
+            <div className="rounded-lg border border-black/10 dark:border-white/10 p-4">
+              <div className="text-3xl font-bold">3x</div>
+              <div className="text-xs text-black/70 dark:text-white/70">Care team productivity</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-20">
+        <h3 className="text-xl font-semibold text-center">Integrates with your EHR</h3>
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
+          <div className="h-12 rounded-md border border-black/10 dark:border-white/10 flex items-center justify-center text-xs opacity-70">Epic</div>
+          <div className="h-12 rounded-md border border-black/10 dark:border-white/10 flex items-center justify-center text-xs opacity-70">Cerner</div>
+          <div className="h-12 rounded-md border border-black/10 dark:border-white/10 flex items-center justify-center text-xs opacity-70">Athenahealth</div>
+          <div className="h-12 rounded-md border border-black/10 dark:border-white/10 flex items-center justify-center text-xs opacity-70">Allscripts</div>
+        </div>
+      </section>
+
+      <section className="mt-20">
         <h2 className="text-2xl sm:text-3xl font-semibold text-center">Frequently asked questions</h2>
         <div className="mt-8 divide-y divide-black/10 dark:divide-white/10 rounded-2xl border border-black/10 dark:border-white/10">
           <details className="p-6 group">
@@ -95,6 +159,16 @@ export default function Home() {
               View Plans
             </a>
           </div>
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <div className="rounded-2xl border border-black/10 dark:border-white/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="text-xl font-semibold">Refer a patient to a specialist</h3>
+            <p className="text-sm text-black/70 dark:text-white/70 mt-1">Smart suggestions for the right specialist based on risk and history.</p>
+          </div>
+          <a href="/pricing" className="inline-flex items-center rounded-md bg-black text-white dark:bg-white dark:text-black px-4 py-2 text-sm font-medium hover:opacity-90">Get Started</a>
         </div>
       </section>
     </div>
