@@ -105,7 +105,12 @@ export default function LoginPage() {
                 label="Email Address" 
                 type="email" 
                 value={email} 
-                onChange={(e)=>setEmail(e.target.value)} 
+                onChange={(e)=>{
+                  setEmail(e.target.value);
+                  if (errors.email) {
+                    setErrors(prev => ({...prev, email: ""}));
+                  }
+                }} 
                 error={errors.email}
                 placeholder="Enter your email"
               />
@@ -121,7 +126,12 @@ export default function LoginPage() {
                     } focus:ring-2 focus:outline-none`}
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e)=>{
+                      setPassword(e.target.value);
+                      if (errors.password) {
+                        setErrors(prev => ({...prev, password: ""}));
+                      }
+                    }}
                     placeholder="Enter your password"
                   />
                   <button
@@ -139,7 +149,12 @@ export default function LoginPage() {
               <Select
                 label="Account Type"
                 value={role}
-                onChange={(e)=>setRole(e.target.value)}
+                onChange={(e)=>{
+                  setRole(e.target.value);
+                  if (errors.role) {
+                    setErrors(prev => ({...prev, role: ""}));
+                  }
+                }}
                 options={[
                   { value: "patient", label: "Patient" },
                   { value: "doctor", label: "Healthcare Professional" }

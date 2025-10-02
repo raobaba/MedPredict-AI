@@ -131,7 +131,12 @@ export default function SignupPage() {
               label="Email Address" 
               type="email" 
               value={email} 
-              onChange={(e)=>setEmail(e.target.value)} 
+              onChange={(e)=>{
+                setEmail(e.target.value);
+                if (errors.email) {
+                  setErrors(prev => ({...prev, email: ""}));
+                }
+              }} 
               error={errors.email}
               placeholder="Enter your email address"
             />
@@ -150,7 +155,12 @@ export default function SignupPage() {
                 label="Password" 
                 type="password" 
                 value={password} 
-                onChange={(e)=>setPassword(e.target.value)} 
+                onChange={(e)=>{
+                  setPassword(e.target.value);
+                  if (errors.password) {
+                    setErrors(prev => ({...prev, password: ""}));
+                  }
+                }} 
                 error={errors.password}
                 placeholder="Create a password"
               />
@@ -158,7 +168,12 @@ export default function SignupPage() {
                 label="Confirm Password" 
                 type="password" 
                 value={confirm} 
-                onChange={(e)=>setConfirm(e.target.value)} 
+                onChange={(e)=>{
+                  setConfirm(e.target.value);
+                  if (errors.confirm) {
+                    setErrors(prev => ({...prev, confirm: ""}));
+                  }
+                }} 
                 error={errors.confirm}
                 placeholder="Confirm your password"
               />
@@ -176,7 +191,12 @@ export default function SignupPage() {
             <Input 
               label="Full Name" 
               value={name} 
-              onChange={(e)=>setName(e.target.value)} 
+              onChange={(e)=>{
+                setName(e.target.value);
+                if (errors.name) {
+                  setErrors(prev => ({...prev, name: ""}));
+                }
+              }} 
               error={errors.name}
               placeholder="Enter your full name"
             />
@@ -193,7 +213,12 @@ export default function SignupPage() {
             <Select
               label="Account Type"
               value={role}
-              onChange={(e)=>setRole(e.target.value)}
+              onChange={(e)=>{
+                setRole(e.target.value);
+                if (errors.role) {
+                  setErrors(prev => ({...prev, role: ""}));
+                }
+              }}
               error={errors.role}
               options={[
                 { value: "patient", label: "Patient" },
@@ -214,7 +239,12 @@ export default function SignupPage() {
               <Input 
                 label="Specialization" 
                 value={specialization} 
-                onChange={(e)=>setSpecialization(e.target.value)} 
+                onChange={(e)=>{
+                  setSpecialization(e.target.value);
+                  if (errors.specialization) {
+                    setErrors(prev => ({...prev, specialization: ""}));
+                  }
+                }} 
                 error={errors.specialization}
                 placeholder="e.g., Cardiology, Oncology"
               />
@@ -231,14 +261,24 @@ export default function SignupPage() {
                   label="Phone (optional)" 
                   type="tel" 
                   value={phone} 
-                  onChange={(e)=>setPhone(e.target.value)}
+                  onChange={(e)=>{
+                    setPhone(e.target.value);
+                    if (errors.phone) {
+                      setErrors(prev => ({...prev, phone: ""}));
+                    }
+                  }}
                   placeholder="Enter your phone number"
                 />
                 <div className="space-y-3 pt-2">
                   <Checkbox
                     label="I agree to the Terms and Privacy Policy."
                     checked={agree}
-                    onChange={(e)=>setAgree(e.target.checked)}
+                    onChange={(e)=>{
+                      setAgree(e.target.checked);
+                      if (errors.agree) {
+                        setErrors(prev => ({...prev, agree: ""}));
+                      }
+                    }}
                     error={errors.agree}
                   />
                   <Checkbox
@@ -263,21 +303,36 @@ export default function SignupPage() {
               <Input 
                 label="Medical License ID" 
                 value={licenseId} 
-                onChange={(e)=>setLicenseId(e.target.value)} 
+                onChange={(e)=>{
+                  setLicenseId(e.target.value);
+                  if (errors.licenseId) {
+                    setErrors(prev => ({...prev, licenseId: ""}));
+                  }
+                }} 
                 error={errors.licenseId}
                 placeholder="e.g., NPI / State license"
               />
               <Input 
                 label="Clinic/Organization (optional)" 
                 value={clinic} 
-                onChange={(e)=>setClinic(e.target.value)}
+                onChange={(e)=>{
+                  setClinic(e.target.value);
+                  if (errors.clinic) {
+                    setErrors(prev => ({...prev, clinic: ""}));
+                  }
+                }}
                 placeholder="Enter your clinic or organization"
               />
               <div className="space-y-3 pt-2">
                 <Checkbox
                   label="I agree to the Terms and Privacy Policy."
                   checked={agree}
-                  onChange={(e)=>setAgree(e.target.checked)}
+                  onChange={(e)=>{
+                    setAgree(e.target.checked);
+                    if (errors.agree) {
+                      setErrors(prev => ({...prev, agree: ""}));
+                    }
+                  }}
                   error={errors.agree}
                 />
                 <Checkbox
