@@ -19,18 +19,20 @@ export default function Navbar() {
   return (
     <header
       suppressHydrationWarning
-      className="sticky top-0 z-50 border-b border-black/10 dark:border-white/10 bg-white/70 dark:bg-black/30 backdrop-blur supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-black/30"
+      className="sticky top-0 z-50 border-b border-black/10 dark:border-white/10 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 dark:from-blue-950/50 dark:via-purple-950/50 dark:to-pink-950/50 backdrop-blur supports-[backdrop-filter]:bg-gradient-to-r supports-[backdrop-filter]:from-blue-50/60 supports-[backdrop-filter]:via-purple-50/60 supports-[backdrop-filter]:to-pink-50/60 supports-[backdrop-filter]:dark:from-blue-950/40 supports-[backdrop-filter]:dark:via-purple-950/40 supports-[backdrop-filter]:dark:to-pink-950/40"
     >
       <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
-          className="font-semibold text-lg inline-flex items-center gap-2"
+          className="font-bold text-lg inline-flex items-center gap-2"
         >
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-black text-white dark:bg-white dark:text-black text-xs">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white text-sm font-bold shadow-lg">
             MP
           </span>
-          MedPredict AI
+          <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            MedPredict AI
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -61,10 +63,9 @@ export default function Navbar() {
           </Link>
           <Link
             href="#contact"
-            className="inline-flex items-center rounded-md bg-black text-white dark:bg-white dark:text-black 
-            px-3 py-1.5 text-sm font-medium hover:opacity-90 
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
-            dark:focus-visible:ring-white/20"
+            className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white 
+            px-4 py-2 text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20"
           >
             Contact
           </Link>
@@ -87,12 +88,12 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={logout}
-                className="inline-flex items-center rounded-md border border-black/10 dark:border-white/15 px-3 py-1.5 
-                hover:bg-black/5 dark:hover:bg-white/10"
+                className="inline-flex items-center rounded-xl border border-black/10 dark:border-white/15 px-3 py-1.5 
+                hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-950/20 dark:hover:to-red-900/20 transition-all duration-200"
               >
                 Sign out
               </button>
-              <div className="h-8 w-8 rounded-full bg-black text-white dark:bg-white dark:text-black inline-flex items-center justify-center text-xs font-medium">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white inline-flex items-center justify-center text-xs font-bold shadow-lg">
                 {initials}
               </div>
             </div>
@@ -117,7 +118,7 @@ export default function Navbar() {
         {/* Mobile Menu Button */}
         <button
           aria-label="Toggle menu"
-          className="md:hidden inline-flex items-center justify-center rounded-md border border-black/10 dark:border-white/15 px-3 py-2 bg-white/60 dark:bg-black/20 backdrop-blur"
+          className="md:hidden inline-flex items-center justify-center rounded-xl border border-black/10 dark:border-white/15 px-3 py-2 bg-gradient-to-r from-blue-50/60 to-purple-50/60 dark:from-blue-950/20 dark:to-purple-950/20 backdrop-blur hover:from-blue-100/60 hover:to-purple-100/60 transition-all duration-200"
           onClick={() => setOpen((v) => !v)}
         >
           <svg
@@ -148,7 +149,7 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {open && (
-        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/40 backdrop-blur">
+        <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-gradient-to-r from-blue-50/90 via-purple-50/90 to-pink-50/90 dark:from-blue-950/60 dark:via-purple-950/60 dark:to-pink-950/60 backdrop-blur">
             <div className="mx-auto max-w-7xl px-6 py-4 grid gap-4 text-sm">
              <Link href="/" className="hover:underline" onClick={() => setOpen(false)}>
               Home
@@ -169,7 +170,7 @@ export default function Navbar() {
              </Link>
              <Link
                href="#contact"
-              className="inline-flex w-fit items-center rounded-md bg-black text-white dark:bg-white dark:text-black px-3 py-1.5 text-sm font-medium hover:opacity-90"
+              className="inline-flex w-fit items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
               onClick={() => setOpen(false)}
             >
               Contact
@@ -189,7 +190,7 @@ export default function Navbar() {
                     logout();
                     setOpen(false);
                   }}
-                  className="justify-self-start inline-flex items-center rounded-md border border-black/10 dark:border-white/15 px-3 py-1.5"
+                  className="justify-self-start inline-flex items-center rounded-xl border border-black/10 dark:border-white/15 px-3 py-1.5 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-950/20 dark:hover:to-red-900/20 transition-all duration-200"
                 >
                   Sign out
                 </button>
