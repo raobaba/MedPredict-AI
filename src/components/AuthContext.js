@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState({
     id: "dev-patient",
     email: "patient@medpredict.ai",
-    role: "patient",
+    role: "doctor",
     name: "John Smith"
   });
   const [token, setToken] = useState("dev-token-123");
@@ -33,12 +33,18 @@ export function AuthProvider({ children }) {
     setUser(nextUser);
     setToken(mockToken);
     window.localStorage.setItem("mpai_auth", JSON.stringify({ user: nextUser, token: mockToken }));
+    
+    // Store role in cookie for middleware access
+    document.cookie = `userRole=${role}; path=/; max-age=86400`; // 24 hours
   }
 
   function logout() {
     setUser(null);
     setToken(null);
     window.localStorage.removeItem("mpai_auth");
+    
+    // Clear role cookie
+    document.cookie = `userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 
   function signup({ name, email, role }) {
@@ -62,6 +68,9 @@ export function AuthProvider({ children }) {
         name: "John Smith"
       });
     }
+    
+    // Update role cookie
+    document.cookie = `userRole=${role}; path=/; max-age=86400`; // 24 hours
   }
 
   const value = useMemo(() => ({ user, token, loading, login, logout, signup, switchRole }), [user, token, loading]);

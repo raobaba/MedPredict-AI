@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import RequireAuth from "../../components/RequireAuth";
+import RequireRole from "../../components/RequireRole";
 import { useAuth } from "../../components/AuthContext";
 import { useNotifications } from "../../components/NotificationContext";
 import Button from "../../components/Button";
@@ -11,8 +12,17 @@ export default function HealthTips() {
   const [tips, setTips] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  const isDoctor = user?.role === "doctor";
 
-  const categories = [
+  const categories = isDoctor ? [
+    { id: "all", name: "All Tips", icon: "🌟" },
+    { id: "clinical", name: "Clinical Care", icon: "🏥" },
+    { id: "patient", name: "Patient Management", icon: "👥" },
+    { id: "diagnosis", name: "Diagnosis", icon: "🔍" },
+    { id: "treatment", name: "Treatment", icon: "💊" },
+    { id: "prevention", name: "Prevention", icon: "🛡️" }
+  ] : [
     { id: "all", name: "All Tips", icon: "🌟" },
     { id: "nutrition", name: "Nutrition", icon: "🥗" },
     { id: "exercise", name: "Exercise", icon: "🏃‍♂️" },
@@ -21,7 +31,80 @@ export default function HealthTips() {
     { id: "prevention", name: "Prevention", icon: "🛡️" }
   ];
 
-  const predefinedTips = [
+  const predefinedTips = isDoctor ? [
+    {
+      id: 1,
+      category: "clinical",
+      title: "Effective Patient Communication",
+      content: "Use clear, jargon-free language when explaining medical conditions to patients. Ask open-ended questions and actively listen to build trust and improve patient outcomes.",
+      difficulty: "Moderate",
+      duration: "Every consultation",
+      benefits: ["Better patient compliance", "Improved outcomes", "Stronger relationships"]
+    },
+    {
+      id: 2,
+      category: "patient",
+      title: "Comprehensive Health History",
+      content: "Always take a thorough medical history including family history, lifestyle factors, and social determinants of health. This comprehensive approach leads to better diagnoses and treatment plans.",
+      difficulty: "Moderate",
+      duration: "Initial consultation",
+      benefits: ["Accurate diagnosis", "Personalized care", "Risk assessment"]
+    },
+    {
+      id: 3,
+      category: "diagnosis",
+      title: "Differential Diagnosis Approach",
+      content: "Always consider multiple possible diagnoses and systematically rule them out. Use evidence-based guidelines and clinical decision support tools to ensure comprehensive evaluation.",
+      difficulty: "Advanced",
+      duration: "Every case",
+      benefits: ["Reduced misdiagnosis", "Better patient safety", "Improved accuracy"]
+    },
+    {
+      id: 4,
+      category: "treatment",
+      title: "Evidence-Based Medicine",
+      content: "Stay updated with the latest medical research and guidelines. Use evidence-based treatment protocols and regularly review your practice against current best practices.",
+      difficulty: "Advanced",
+      duration: "Ongoing",
+      benefits: ["Better outcomes", "Reduced errors", "Professional growth"]
+    },
+    {
+      id: 5,
+      category: "prevention",
+      title: "Preventive Care Focus",
+      content: "Emphasize preventive care and early intervention. Screen for common conditions based on age, gender, and risk factors. Educate patients about lifestyle modifications.",
+      difficulty: "Moderate",
+      duration: "Regular check-ups",
+      benefits: ["Early detection", "Cost-effective care", "Better long-term outcomes"]
+    },
+    {
+      id: 6,
+      category: "clinical",
+      title: "Cultural Competency",
+      content: "Develop cultural awareness and sensitivity when treating patients from diverse backgrounds. Understand how cultural beliefs may affect health behaviors and treatment adherence.",
+      difficulty: "Moderate",
+      duration: "Ongoing",
+      benefits: ["Better patient care", "Reduced disparities", "Improved communication"]
+    },
+    {
+      id: 7,
+      category: "patient",
+      title: "Patient-Centered Care",
+      content: "Involve patients in their care decisions. Explain treatment options, risks, and benefits clearly. Respect patient autonomy and preferences while providing expert medical guidance.",
+      difficulty: "Moderate",
+      duration: "Every consultation",
+      benefits: ["Patient satisfaction", "Better adherence", "Improved outcomes"]
+    },
+    {
+      id: 8,
+      category: "diagnosis",
+      title: "Red Flag Recognition",
+      content: "Learn to quickly identify 'red flag' symptoms that require immediate attention. Develop systematic approaches to distinguish between urgent and non-urgent presentations.",
+      difficulty: "Advanced",
+      duration: "Every consultation",
+      benefits: ["Patient safety", "Timely intervention", "Risk reduction"]
+    }
+  ] : [
     {
       id: 1,
       category: "nutrition",
@@ -157,14 +240,18 @@ export default function HealthTips() {
 
   return (
     <RequireAuth>
-      <div className="py-8">
+      <RequireRole allowedRoles={["doctor", "patient"]}>
+        <div className="py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            Health Tips & Insights
+            {isDoctor ? "Clinical Best Practices" : "Health Tips & Insights"}
           </h1>
           <p className="text-black/70 dark:text-white/70">
-            Discover personalized health tips and AI-generated insights to improve your well-being.
+            {isDoctor 
+              ? "Professional guidance and best practices for patient care and clinical excellence"
+              : "Discover personalized health tips and AI-generated insights to improve your well-being"
+            }
           </p>
         </div>
 
@@ -247,7 +334,7 @@ export default function HealthTips() {
                   Generating...
                 </div>
               ) : (
-                "Generate AI Tip"
+                isDoctor ? "Generate Clinical Insight" : "Generate AI Tip"
               )}
             </Button>
           </div>
@@ -342,7 +429,8 @@ export default function HealthTips() {
             </p>
           </div>
         )}
-      </div>
+        </div>
+      </RequireRole>
     </RequireAuth>
   );
 }

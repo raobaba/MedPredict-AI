@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import RequireAuth from "../../components/RequireAuth";
+import RequireRole from "../../components/RequireRole";
 import { useAuth } from "../../components/AuthContext";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
@@ -669,7 +670,8 @@ export default function ProfilePage() {
 
   return (
     <RequireAuth>
-      <div className="py-8">
+      <RequireRole allowedRoles={["doctor", "patient"]}>
+        <div className="py-8">
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
@@ -710,8 +712,9 @@ export default function ProfilePage() {
           >
             Save Changes
           </Button>
-      </div>
-    </div>
+        </div>
+        </div>
+      </RequireRole>
     </RequireAuth>
   );
 }

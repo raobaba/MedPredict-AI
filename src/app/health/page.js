@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import RequireAuth from "../../components/RequireAuth";
+import RequireRole from "../../components/RequireRole";
 import { useAuth } from "../../components/AuthContext";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
@@ -177,7 +178,8 @@ export default function HealthDashboard() {
 
   return (
     <RequireAuth>
-      <div className="py-8">
+      <RequireRole allowedRoles={["patient"]}>
+        <div className="py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
             {isDoctor ? "Patient Health Monitoring" : "Health Tracker Dashboard"}
@@ -222,12 +224,12 @@ export default function HealthDashboard() {
         {/* Overview Tab */}
         {activeTab === "overview" && (
           <div className="space-y-6">
-            {/* Quick Stats */}
+            {/* Health Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Blood Pressure */}
-              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
+              <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-xl">
+                  <div className="p-3 bg-red-100 dark:bg-red-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <PressureIcon />
                   </div>
                   <div className="flex items-center gap-1">
@@ -236,17 +238,20 @@ export default function HealthDashboard() {
                   </div>
                 </div>
                 <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Blood Pressure</h3>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">
                   {getLatestValue(mockHealthData.bloodPressure, "systolic")}/
                   {getLatestValue(mockHealthData.bloodPressure, "diastolic")}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">mmHg</p>
+                <div className="mt-3 text-xs text-gray-500">
+                  Last updated: {getLatestValue(mockHealthData.bloodPressure, "timestamp")}
+                </div>
               </div>
 
               {/* Glucose */}
-              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
+              <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-xl">
+                  <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <DropletIcon />
                   </div>
                   <div className="flex items-center gap-1">
@@ -255,14 +260,17 @@ export default function HealthDashboard() {
                   </div>
                 </div>
                 <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Glucose</h3>
-                <p className="text-2xl font-bold">{getLatestValue(mockHealthData.glucose, "value")}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{getLatestValue(mockHealthData.glucose, "value")}</p>
                 <p className="text-xs text-gray-500 mt-1">mg/dL</p>
+                <div className="mt-3 text-xs text-gray-500">
+                  Type: {getLatestValue(mockHealthData.glucose, "type")}
+                </div>
               </div>
 
               {/* Sleep */}
-              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
+              <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
+                  <div className="p-3 bg-purple-100 dark:bg-purple-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <SleepIcon />
                   </div>
                   <div className="flex items-center gap-1">
@@ -271,14 +279,24 @@ export default function HealthDashboard() {
                   </div>
                 </div>
                 <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Sleep</h3>
-                <p className="text-2xl font-bold">{getLatestValue(mockHealthData.sleep, "hours")}h</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{getLatestValue(mockHealthData.sleep, "hours")}h</p>
                 <p className="text-xs text-gray-500 mt-1">Last night</p>
+                <div className="mt-3">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    getLatestValue(mockHealthData.sleep, "quality") === "excellent" ? "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200" :
+                    getLatestValue(mockHealthData.sleep, "quality") === "good" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200" :
+                    getLatestValue(mockHealthData.sleep, "quality") === "fair" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200" :
+                    "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200"
+                  }`}>
+                    {getLatestValue(mockHealthData.sleep, "quality")}
+                  </span>
+                </div>
               </div>
 
               {/* Steps */}
-              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
+              <div className="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-xl">
+                  <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
                     <ActivityIcon />
                   </div>
                   <div className="flex items-center gap-1">
@@ -287,46 +305,61 @@ export default function HealthDashboard() {
                   </div>
                 </div>
                 <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Steps</h3>
-                <p className="text-2xl font-bold">{getLatestValue(mockHealthData.steps, "count").toLocaleString()}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{getLatestValue(mockHealthData.steps, "count").toLocaleString()}</p>
                 <p className="text-xs text-gray-500 mt-1">Today</p>
+                <div className="mt-3">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.min((getLatestValue(mockHealthData.steps, "count") / 10000) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Goal: 10,000 steps</p>
+                </div>
               </div>
             </div>
 
             {/* Recent Activity */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold">Recent Activity</h3>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-gray-500">Live updates</span>
+                </div>
+              </div>
               <div className="space-y-3">
-                <div className="flex items-center justify-between py-2">
+                <div className="group flex items-center justify-between py-3 px-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
+                    <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg group-hover:scale-110 transition-transform duration-200">
                       <PressureIcon />
                     </div>
                     <div>
-                      <p className="font-medium">Blood Pressure Logged</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Blood Pressure Logged</p>
                       <p className="text-sm text-gray-500">120/80 mmHg</p>
                     </div>
                   </div>
                   <span className="text-sm text-gray-500">2 hours ago</span>
                 </div>
-                <div className="flex items-center justify-between py-2">
+                <div className="group flex items-center justify-between py-3 px-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+                    <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg group-hover:scale-110 transition-transform duration-200">
                       <ActivityIcon />
                     </div>
                     <div>
-                      <p className="font-medium">Steps Goal Reached</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Steps Goal Reached</p>
                       <p className="text-sm text-gray-500">10,000 steps completed</p>
                     </div>
                   </div>
                   <span className="text-sm text-gray-500">4 hours ago</span>
                 </div>
-                <div className="flex items-center justify-between py-2">
+                <div className="group flex items-center justify-between py-3 px-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg group-hover:scale-110 transition-transform duration-200">
                       <DeviceIcon />
                     </div>
                     <div>
-                      <p className="font-medium">Apple Watch Synced</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Apple Watch Synced</p>
                       <p className="text-sm text-gray-500">Latest data imported</p>
                     </div>
                   </div>
@@ -341,9 +374,16 @@ export default function HealthDashboard() {
         {activeTab === "vitals" && (
           <div className="max-w-2xl">
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
-              <h3 className="text-lg font-semibold mb-6">
-                {isDoctor ? "Patient Vitals Overview" : "Log New Vital"}
-              </h3>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-xl">
+                  <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold">
+                  {isDoctor ? "Patient Vitals Overview" : "Log New Vital"}
+                </h3>
+              </div>
               
               {isDoctor ? (
                 <div className="space-y-6">
@@ -366,57 +406,95 @@ export default function HealthDashboard() {
                 </div>
               ) : (
                 <form onSubmit={handleVitalSubmit} className="space-y-6">
-                <Select
-                  label="Vital Type"
-                  value={newVital.type}
-                  onChange={(e) => setNewVital({ ...newVital, type: e.target.value })}
-                  options={[
-                    { value: "bloodPressure", label: "Blood Pressure" },
-                    { value: "glucose", label: "Blood Glucose" },
-                    { value: "sleep", label: "Sleep" },
-                    { value: "steps", label: "Steps" },
-                    { value: "heartRate", label: "Heart Rate" },
-                  ]}
-                />
+                <div className="group">
+                  <Select
+                    label="Vital Type"
+                    value={newVital.type}
+                    onChange={(e) => setNewVital({ ...newVital, type: e.target.value })}
+                    options={[
+                      { value: "bloodPressure", label: "Blood Pressure" },
+                      { value: "glucose", label: "Blood Glucose" },
+                      { value: "sleep", label: "Sleep" },
+                      { value: "steps", label: "Steps" },
+                      { value: "heartRate", label: "Heart Rate" },
+                    ]}
+                    className="group-hover:border-blue-300 transition-colors duration-200"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Select the type of vital sign you want to log</p>
+                </div>
 
                 {newVital.type === "bloodPressure" && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Systolic (mmHg)"
-                      type="number"
-                      value={newVital.systolic}
-                      onChange={(e) => setNewVital({ ...newVital, systolic: e.target.value })}
-                      placeholder="120"
-                    />
-                    <Input
-                      label="Diastolic (mmHg)"
-                      type="number"
-                      value={newVital.diastolic}
-                      onChange={(e) => setNewVital({ ...newVital, diastolic: e.target.value })}
-                      placeholder="80"
-                    />
+                  <div className="space-y-4">
+                    <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <span className="text-sm font-medium text-red-800 dark:text-red-200">Blood Pressure Guidelines</span>
+                      </div>
+                      <p className="text-xs text-red-600 dark:text-red-400">Normal: 90-120/60-80 mmHg | High: 140+/90+ mmHg</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="group">
+                        <Input
+                          label="Systolic (mmHg)"
+                          type="number"
+                          value={newVital.systolic}
+                          onChange={(e) => setNewVital({ ...newVital, systolic: e.target.value })}
+                          placeholder="120"
+                          className="group-hover:border-red-300 transition-colors duration-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Top number</p>
+                      </div>
+                      <div className="group">
+                        <Input
+                          label="Diastolic (mmHg)"
+                          type="number"
+                          value={newVital.diastolic}
+                          onChange={(e) => setNewVital({ ...newVital, diastolic: e.target.value })}
+                          placeholder="80"
+                          className="group-hover:border-red-300 transition-colors duration-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Bottom number</p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {newVital.type === "glucose" && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input
-                      label="Glucose Level (mg/dL)"
-                      type="number"
-                      value={newVital.glucose}
-                      onChange={(e) => setNewVital({ ...newVital, glucose: e.target.value })}
-                      placeholder="95"
-                    />
-                    <Select
-                      label="Measurement Type"
-                      value={newVital.glucoseType}
-                      onChange={(e) => setNewVital({ ...newVital, glucoseType: e.target.value })}
-                      options={[
-                        { value: "fasting", label: "Fasting" },
-                        { value: "post-meal", label: "Post-meal" },
-                        { value: "random", label: "Random" },
-                      ]}
-                    />
+                  <div className="space-y-4">
+                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Glucose Guidelines</span>
+                      </div>
+                      <p className="text-xs text-blue-600 dark:text-blue-400">Normal: 70-100 mg/dL (fasting) | 140+ mg/dL (post-meal)</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="group">
+                        <Input
+                          label="Glucose Level (mg/dL)"
+                          type="number"
+                          value={newVital.glucose}
+                          onChange={(e) => setNewVital({ ...newVital, glucose: e.target.value })}
+                          placeholder="95"
+                          className="group-hover:border-blue-300 transition-colors duration-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Blood sugar level</p>
+                      </div>
+                      <div className="group">
+                        <Select
+                          label="Measurement Type"
+                          value={newVital.glucoseType}
+                          onChange={(e) => setNewVital({ ...newVital, glucoseType: e.target.value })}
+                          options={[
+                            { value: "fasting", label: "Fasting" },
+                            { value: "post-meal", label: "Post-meal" },
+                            { value: "random", label: "Random" },
+                          ]}
+                          className="group-hover:border-blue-300 transition-colors duration-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">When was this reading taken?</p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -464,9 +542,17 @@ export default function HealthDashboard() {
                   />
                 )}
 
-                <Button type="submit" className="w-full">
-                  Log Vital
-                </Button>
+                <div className="flex gap-4">
+                  <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Log Vital
+                  </Button>
+                  <Button type="button" className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200">
+                    Clear Form
+                  </Button>
+                </div>
               </form>
               )}
             </div>
@@ -476,11 +562,19 @@ export default function HealthDashboard() {
         {/* Devices Tab - Patient Only */}
         {!isDoctor && activeTab === "devices" && (
           <div className="space-y-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-xl">
+                <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold">Connected Devices</h3>
+            </div>
             <div className="grid gap-6">
               {wearableDevices.map((device) => (
                 <div
                   key={device.id}
-                  className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg"
+                  className="group bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -557,11 +651,26 @@ export default function HealthDashboard() {
           <div className="space-y-6">
             {/* Blood Pressure Trend */}
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">Blood Pressure Trend (7 Days)</h3>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-xl">
+                  <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold">Blood Pressure Trend (7 Days)</h3>
+              </div>
               <div className="space-y-4">
-                <div className="flex justify-between text-sm text-gray-500 mb-2">
+                <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
                   <span>Systolic/Diastolic (mmHg)</span>
-                  <span>Average: {getAverage(mockHealthData.bloodPressure, "systolic")}/{getAverage(mockHealthData.bloodPressure, "diastolic")}</span>
+                  <div className="flex items-center gap-4">
+                    <span>Average: {getAverage(mockHealthData.bloodPressure, "systolic")}/{getAverage(mockHealthData.bloodPressure, "diastolic")}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <span className="text-xs">Systolic</span>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-xs">Diastolic</span>
+                    </div>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   {mockHealthData.bloodPressure.map((reading, index) => (
@@ -805,7 +914,8 @@ export default function HealthDashboard() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </RequireRole>
     </RequireAuth>
   );
 }

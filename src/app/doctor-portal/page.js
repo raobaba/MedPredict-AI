@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import RequireAuth from "../../components/RequireAuth";
+import RequireRole from "../../components/RequireRole";
 import { useAuth } from "../../components/AuthContext";
 import { useSocket } from "../../components/SocketContext";
 import { useNotifications } from "../../components/NotificationContext";
@@ -155,7 +156,8 @@ export default function DoctorPortal() {
 
   return (
     <RequireAuth>
-      <div className="py-8">
+      <RequireRole allowedRoles={["doctor"]}>
+        <div className="py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
@@ -263,16 +265,25 @@ export default function DoctorPortal() {
           {filteredPatients.map((patient) => (
             <div
               key={patient.id}
-              className="bg-white dark:bg-gray-900 rounded-2xl border border-black/10 dark:border-white/10 p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+              className={`bg-white dark:bg-gray-900 rounded-2xl p-6 border shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col h-full ${
+                selectedPatient?.id === patient.id 
+                  ? 'border-blue-500 dark:border-blue-400 ring-2 ring-blue-500/20 bg-blue-50/50 dark:bg-blue-900/20' 
+                  : 'border-black/10 dark:border-white/10 hover:border-blue-300 dark:hover:border-blue-600'
+              }`}
               onClick={() => setSelectedPatient(patient)}
             >
               {/* Patient Header */}
               <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold">{patient.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {patient.age} years old • {patient.gender}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full ${
+                    selectedPatient?.id === patient.id ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
+                  }`}></div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{patient.name}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {patient.age} years old • {patient.gender}
+                    </p>
+                  </div>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(patient.status)}`}>
                   {patient.status}
@@ -346,36 +357,45 @@ export default function DoctorPortal() {
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="flex gap-2">
+              {/* Action Buttons - Always at bottom of card */}
+              <div className="flex gap-2 mt-auto pt-4">
                 <Button
-                  className="flex-1 px-3 py-2 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  className="flex-1 px-3 py-2 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedPatient(patient);
                     setShowVideoCall(true);
                   }}
                 >
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
                   Video Call
                 </Button>
                 <Button
-                  className="flex-1 px-3 py-2 text-xs bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
+                  className="flex-1 px-3 py-2 text-xs bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all duration-200"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedPatient(patient);
                     setShowVitalsMonitor(true);
                   }}
                 >
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
                   Vitals
                 </Button>
                 <Button
-                  className="flex-1 px-3 py-2 text-xs bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  className="flex-1 px-3 py-2 text-xs bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all duration-200"
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedPatient(patient);
                     setShowNotes(true);
                   }}
                 >
+                  <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                   Notes
                 </Button>
               </div>
@@ -538,7 +558,9 @@ export default function DoctorPortal() {
             </div>
           </div>
         )}
-      </div>
+
+        </div>
+      </RequireRole>
     </RequireAuth>
   );
 }
