@@ -7,7 +7,7 @@ import { useAuth } from "./AuthContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading, switchRole } = useAuth();
   const initials = user?.email ? user.email[0]?.toUpperCase() : "";
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -36,80 +36,119 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-2 text-sm">
-          <Link
-            href="/"
-            className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
-            dark:focus-visible:ring-white/20"
-          >
-            Home
-          </Link>
-          <Link
-            href="/pricing"
-            className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
-            dark:focus-visible:ring-white/20"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/about"
-            className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
-            dark:focus-visible:ring-white/20"
-          >
-            About
-          </Link>
-          <Link
-            href="#contact"
-            className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white 
-            px-4 py-2 text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20"
-          >
-            Contact
-          </Link>
+        <nav className="hidden md:flex items-center gap-4 text-sm">
+          {/* Main Navigation Links - Only show when not logged in */}
+          {mounted && !loading && !user && (
+            <>
+              <Link
+                href="/"
+                className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
+                dark:focus-visible:ring-white/20"
+              >
+                Home
+              </Link>
+              <Link
+                href="/pricing"
+                className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
+                dark:focus-visible:ring-white/20"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/about"
+                className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
+                dark:focus-visible:ring-white/20"
+              >
+                About
+              </Link>
+            </>
+          )}
 
           {/* Auth Section */}
           {mounted && !loading && user ? (
-            <div className="flex items-center gap-3 ml-2">
-              <span className="hidden lg:inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/15 px-3 py-1">
-                <span className="text-xs opacity-70">
-                  {user.role === "doctor" ? "Doctor" : "Patient"}
-                </span>
-              </span>
+            <div className="flex items-center gap-3">
+              {/* Role Switcher - Compact */}
+              <div className="flex items-center gap-2">
+                <select
+                  value={user.role}
+                  onChange={(e) => switchRole(e.target.value)}
+                  className="appearance-none bg-transparent border border-black/10 dark:border-white/15 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                </select>
+              </div>
+              
+              {/* Profile Link */}
               <Link
                 href="/profile"
                 className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
                 dark:focus-visible:ring-white/20"
               >
-                My Profile
+                Profile
               </Link>
-              <button
-                onClick={logout}
-                className="inline-flex items-center rounded-xl border border-black/10 dark:border-white/15 px-3 py-1.5 
-                hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-950/20 dark:hover:to-red-900/20 transition-all duration-200"
-              >
-                Sign out
-              </button>
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white inline-flex items-center justify-center text-xs font-bold shadow-lg">
-                {initials}
-              </div>
-            </div>
-          ) : mounted && !loading ? (
-            <div className="flex items-center gap-2 ml-2">
+              
+              {/* Doctor Portal Link - Only for doctors */}
+              {user?.role === "doctor" && (
+                <Link
+                  href="/doctor-portal"
+                  className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
+                  dark:focus-visible:ring-white/20"
+                >
+                  Portal
+                </Link>
+              )}
+              
+              {/* Health Tracker Link */}
               <Link
-                href="/login"
+                href="/health"
                 className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
                 dark:focus-visible:ring-white/20"
+              >
+                Health
+              </Link>
+              
+              {/* Health Tips Link */}
+              <Link
+                href="/health-tips"
+                className="px-3 py-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
+                dark:focus-visible:ring-white/20"
+              >
+                Tips
+              </Link>
+              
+              {/* User Avatar with Logout */}
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white inline-flex items-center justify-center text-xs font-bold shadow-lg">
+                  {initials}
+                </div>
+                <button
+                  onClick={logout}
+                  className="text-xs text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                  title="Sign out"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          ) : mounted && !loading ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 Login
               </Link>
             </div>
           ) : (
-            <div className="flex items-center gap-2 ml-2" aria-hidden>
+            <div className="flex items-center gap-2" aria-hidden>
               <span className="h-8 w-16 rounded-md bg-black/5 dark:bg-white/10" />
             </div>
           )}
@@ -150,65 +189,75 @@ export default function Navbar() {
       {/* Mobile Navigation */}
       {open && (
         <div className="md:hidden border-t border-black/10 dark:border-white/10 bg-gradient-to-r from-blue-50/90 via-purple-50/90 to-pink-50/90 dark:from-blue-950/60 dark:via-purple-950/60 dark:to-pink-950/60 backdrop-blur">
-            <div className="mx-auto max-w-7xl px-6 py-4 grid gap-4 text-sm">
-             <Link href="/" className="hover:underline" onClick={() => setOpen(false)}>
-              Home
-             </Link>
-             <Link
-               href="/pricing"
-              className="hover:underline"
-              onClick={() => setOpen(false)}
-            >
-              Pricing
-             </Link>
-             <Link
-               href="/about"
-              className="hover:underline"
-              onClick={() => setOpen(false)}
-            >
-              About
-             </Link>
-             <Link
-               href="#contact"
-              className="inline-flex w-fit items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
-              onClick={() => setOpen(false)}
-            >
-              Contact
-             </Link>
-
-            {mounted && !loading && user ? (
+          <div className="mx-auto max-w-7xl px-6 py-4 space-y-3">
+            {/* Show main nav only when not logged in */}
+            {mounted && !loading && !user && (
               <>
-                 <Link
-                   href="/profile"
-                  className="hover:underline"
-                  onClick={() => setOpen(false)}
-                >
-                  My Profile
-                 </Link>
+                <Link href="/" className="block hover:underline" onClick={() => setOpen(false)}>
+                  Home
+                </Link>
+                <Link href="/pricing" className="block hover:underline" onClick={() => setOpen(false)}>
+                  Pricing
+                </Link>
+                <Link href="/about" className="block hover:underline" onClick={() => setOpen(false)}>
+                  About
+                </Link>
+              </>
+            )}
+
+            {/* Auth Section */}
+            {mounted && !loading && user ? (
+              <div className="space-y-3">
+                {/* Role Switcher */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm opacity-70">Role:</span>
+                  <select
+                    value={user.role}
+                    onChange={(e) => switchRole(e.target.value)}
+                    className="bg-transparent border border-black/10 dark:border-white/15 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  >
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                  </select>
+                </div>
+                
+                {/* Navigation Links */}
+                <Link href="/profile" className="block hover:underline" onClick={() => setOpen(false)}>
+                  Profile
+                </Link>
+                {user?.role === "doctor" && (
+                  <Link href="/doctor-portal" className="block hover:underline" onClick={() => setOpen(false)}>
+                    Portal
+                  </Link>
+                )}
+                <Link href="/health" className="block hover:underline" onClick={() => setOpen(false)}>
+                  Health
+                </Link>
+                <Link href="/health-tips" className="block hover:underline" onClick={() => setOpen(false)}>
+                  Tips
+                </Link>
+                
+                {/* Logout */}
                 <button
                   onClick={() => {
                     logout();
                     setOpen(false);
                   }}
-                  className="justify-self-start inline-flex items-center rounded-xl border border-black/10 dark:border-white/15 px-3 py-1.5 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 dark:hover:from-red-950/20 dark:hover:to-red-900/20 transition-all duration-200"
+                  className="text-left text-red-600 dark:text-red-400 hover:underline"
                 >
                   Sign out
                 </button>
-              </>
+              </div>
             ) : mounted && !loading ? (
-              <>
-                 <Link
-                   href="/login"
-                  className="hover:underline"
-                  onClick={() => setOpen(false)}
-                >
-                  Login
-                 </Link>
-              </>
+              <Link
+                href="/login"
+                className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
             ) : (
-              <>
-                <span className="h-9 w-full rounded-md bg-black/5 dark:bg-white/10" />
-              </>
+              <span className="h-9 w-full rounded-md bg-black/5 dark:bg-white/10" />
             )}
           </div>
         </div>

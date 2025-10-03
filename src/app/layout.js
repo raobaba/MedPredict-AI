@@ -2,6 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import { AuthProvider } from "../components/AuthContext";
+import { SocketProvider } from "../components/SocketContext";
+import { NotificationProvider } from "../components/NotificationContext";
+import NotificationPanel from "../components/NotificationPanel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,8 +26,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}>
         <AuthProvider>
-          <Navbar />
-          <main className="mx-auto max-w-7xl px-6">{children}</main>
+          <SocketProvider>
+            <NotificationProvider>
+              <Navbar />
+              <main className="mx-auto max-w-7xl px-6">{children}</main>
+              <NotificationPanel />
+            </NotificationProvider>
+          </SocketProvider>
         </AuthProvider>
         <footer className="mt-16 border-t border-black/10 dark:border-white/10">
           <div className="mx-auto max-w-7xl px-6 py-8 text-sm text-black/60 dark:text-white/60 flex items-center justify-between">

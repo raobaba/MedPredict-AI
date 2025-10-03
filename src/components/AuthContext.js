@@ -5,8 +5,14 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  // Default patient user for development
+  const [user, setUser] = useState({
+    id: "dev-patient",
+    email: "patient@medpredict.ai",
+    role: "patient",
+    name: "John Smith"
+  });
+  const [token, setToken] = useState("dev-token-123");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +46,25 @@ export function AuthProvider({ children }) {
     login({ email, role });
   }
 
-  const value = useMemo(() => ({ user, token, loading, login, logout, signup }), [user, token, loading]);
+  function switchRole(role) {
+    if (role === "doctor") {
+      setUser({
+        id: "dev-doctor",
+        email: "doctor@medpredict.ai",
+        role: "doctor",
+        name: "Dr. Sarah Johnson"
+      });
+    } else if (role === "patient") {
+      setUser({
+        id: "dev-patient",
+        email: "patient@medpredict.ai",
+        role: "patient",
+        name: "John Smith"
+      });
+    }
+  }
+
+  const value = useMemo(() => ({ user, token, loading, login, logout, signup, switchRole }), [user, token, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
