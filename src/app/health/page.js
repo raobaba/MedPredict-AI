@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import RequireAuth from "../../components/RequireAuth";
+import { useAuth } from "../../components/AuthContext";
 import Input from "../../components/Input";
 import Select from "../../components/Select";
 import Button from "../../components/Button";
@@ -111,6 +112,8 @@ const TrendDownIcon = () => (
 );
 
 export default function HealthDashboard() {
+  const { user } = useAuth();
+  const isDoctor = user?.role === "doctor";
   const [activeTab, setActiveTab] = useState("overview");
   const [newVital, setNewVital] = useState({
     type: "bloodPressure",
@@ -177,22 +180,30 @@ export default function HealthDashboard() {
       <div className="py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            Health Tracker Dashboard
+            {isDoctor ? "Patient Health Monitoring" : "Health Tracker Dashboard"}
           </h1>
           <p className="text-black/70 dark:text-white/70">
-            Monitor your vitals, track trends, and sync with wearable devices
+            {isDoctor 
+              ? "Monitor patient vitals, review health trends, and manage patient care"
+              : "Monitor your vitals, track trends, and sync with wearable devices"
+            }
           </p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="mb-8">
           <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
-            {[
+            {(isDoctor ? [
+              { id: "overview", label: "Patient Overview" },
+              { id: "vitals", label: "Patient Vitals" },
+              { id: "alerts", label: "Health Alerts" },
+              { id: "trends", label: "Health Trends" },
+            ] : [
               { id: "overview", label: "Overview" },
               { id: "vitals", label: "Log Vitals" },
               { id: "devices", label: "Devices" },
               { id: "trends", label: "Trends" },
-            ].map((tab) => (
+            ]).map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -330,9 +341,31 @@ export default function HealthDashboard() {
         {activeTab === "vitals" && (
           <div className="max-w-2xl">
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
-              <h3 className="text-lg font-semibold mb-6">Log New Vital</h3>
+              <h3 className="text-lg font-semibold mb-6">
+                {isDoctor ? "Patient Vitals Overview" : "Log New Vital"}
+              </h3>
               
-              <form onSubmit={handleVitalSubmit} className="space-y-6">
+              {isDoctor ? (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">Recent Patient Vitals</h4>
+                      <p className="text-sm text-blue-600 dark:text-blue-400">View detailed vitals for all your patients</p>
+                    </div>
+                    <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">Health Trends</h4>
+                      <p className="text-sm text-green-600 dark:text-green-400">Monitor patient health patterns over time</p>
+                    </div>
+                  </div>
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 dark:text-gray-400">Select a patient from the Doctor Portal to view their detailed vitals</p>
+                    <button className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Go to Doctor Portal
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleVitalSubmit} className="space-y-6">
                 <Select
                   label="Vital Type"
                   value={newVital.type}
@@ -435,12 +468,13 @@ export default function HealthDashboard() {
                   Log Vital
                 </Button>
               </form>
+              )}
             </div>
           </div>
         )}
 
-        {/* Devices Tab */}
-        {activeTab === "devices" && (
+        {/* Devices Tab - Patient Only */}
+        {!isDoctor && activeTab === "devices" && (
           <div className="space-y-6">
             <div className="grid gap-6">
               {wearableDevices.map((device) => (
@@ -616,6 +650,157 @@ export default function HealthDashboard() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Health Alerts Tab - Doctor Only */}
+        {isDoctor && activeTab === "alerts" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Critical Alerts */}
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-red-200 dark:border-red-800 shadow-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-xl">
+                    <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">Critical Alerts</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-red-800 dark:text-red-200">High Blood Pressure</p>
+                        <p className="text-sm text-red-600 dark:text-red-400">Patient: John Smith • 160/100 mmHg</p>
+                      </div>
+                      <span className="text-xs text-red-500">2 min ago</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-red-800 dark:text-red-200">Low Oxygen Saturation</p>
+                        <p className="text-sm text-red-600 dark:text-red-400">Patient: Sarah Johnson • 88% SpO2</p>
+                      </div>
+                      <span className="text-xs text-red-500">15 min ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Warning Alerts */}
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-yellow-200 dark:border-yellow-800 shadow-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900/50 rounded-xl">
+                    <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-yellow-600 dark:text-yellow-400">Warning Alerts</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-yellow-800 dark:text-yellow-200">Elevated Glucose</p>
+                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Patient: Michael Brown • 180 mg/dL</p>
+                      </div>
+                      <span className="text-xs text-yellow-500">1 hour ago</span>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-yellow-800 dark:text-yellow-200">Irregular Heart Rate</p>
+                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Patient: Emily Davis • 110 bpm</p>
+                      </div>
+                      <span className="text-xs text-yellow-500">2 hours ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Patient List with Health Status */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-black/10 dark:border-white/10 shadow-lg">
+              <h3 className="text-lg font-semibold mb-4">All Patients Health Status</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-700">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400">Patient</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400">Last Vitals</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400">Status</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400">Last Update</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600 dark:text-gray-400">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    <tr>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                            JS
+                          </div>
+                          <div>
+                            <p className="font-medium">John Smith</p>
+                            <p className="text-sm text-gray-500">ID: 12345</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="text-sm">
+                          <p>BP: 160/100</p>
+                          <p>HR: 95 bpm</p>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                          Critical
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-500">2 min ago</td>
+                      <td className="py-3 px-4">
+                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                            SJ
+                          </div>
+                          <div>
+                            <p className="font-medium">Sarah Johnson</p>
+                            <p className="text-sm text-gray-500">ID: 12346</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="text-sm">
+                          <p>BP: 120/80</p>
+                          <p>HR: 72 bpm</p>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200">
+                          Stable
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-500">1 hour ago</td>
+                      <td className="py-3 px-4">
+                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

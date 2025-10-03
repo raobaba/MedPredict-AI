@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "./AuthContext";
+import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -111,7 +112,7 @@ export default function Navbar() {
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 
                 dark:focus-visible:ring-white/20"
               >
-                Health
+                {user?.role === "doctor" ? "Patient Health" : "Health"}
               </Link>
               
               {/* Health Tips Link */}
@@ -124,19 +125,8 @@ export default function Navbar() {
                 Tips
               </Link>
               
-              {/* User Avatar with Logout */}
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white inline-flex items-center justify-center text-xs font-bold shadow-lg">
-                  {initials}
-                </div>
-                <button
-                  onClick={logout}
-                  className="text-xs text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                  title="Sign out"
-                >
-                  Sign out
-                </button>
-              </div>
+              {/* Profile Dropdown */}
+              <ProfileDropdown />
             </div>
           ) : mounted && !loading ? (
             <div className="flex items-center gap-2">
@@ -231,22 +221,16 @@ export default function Navbar() {
                   </Link>
                 )}
                 <Link href="/health" className="block hover:underline" onClick={() => setOpen(false)}>
-                  Health
+                  {user?.role === "doctor" ? "Patient Health" : "Health"}
                 </Link>
                 <Link href="/health-tips" className="block hover:underline" onClick={() => setOpen(false)}>
                   Tips
                 </Link>
                 
-                {/* Logout */}
-                <button
-                  onClick={() => {
-                    logout();
-                    setOpen(false);
-                  }}
-                  className="text-left text-red-600 dark:text-red-400 hover:underline"
-                >
-                  Sign out
-                </button>
+                {/* Profile Dropdown for Mobile */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+                  <ProfileDropdown />
+                </div>
               </div>
             ) : mounted && !loading ? (
               <Link

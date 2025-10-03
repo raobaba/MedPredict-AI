@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import RequireAuth from "../../components/RequireAuth";
 import { useAuth } from "../../components/AuthContext";
 import { useSocket } from "../../components/SocketContext";
@@ -91,10 +91,13 @@ export default function DoctorPortal() {
   const [showVideoCall, setShowVideoCall] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showVitalsMonitor, setShowVitalsMonitor] = useState(false);
+  const notificationsAdded = useRef(false);
 
   // Add doctor-specific notifications
   useEffect(() => {
-    if (user?.role === "doctor") {
+    if (user?.role === "doctor" && !notificationsAdded.current) {
+      notificationsAdded.current = true;
+      
       // Add critical patient alert
       const criticalPatients = patients.filter(p => p.status === "Critical");
       if (criticalPatients.length > 0) {

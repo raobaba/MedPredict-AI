@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useAuth } from "./AuthContext";
 
 const NotificationContext = createContext(null);
@@ -129,33 +129,33 @@ export function NotificationProvider({ children }) {
         setNotifications(prev => [...prev, followUpReminder]);
       }, 5000);
     }
-  }, [user]);
+  }, [user?.id]); // Only depend on user.id to prevent infinite loops
 
-  const addNotification = (notification) => {
+  const addNotification = useCallback((notification) => {
     setNotifications(prev => [notification, ...prev]);
-  };
+  }, []);
 
-  const removeNotification = (id) => {
+  const removeNotification = useCallback((id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
-  };
+  }, []);
 
-  const markAsRead = (id) => {
+  const markAsRead = useCallback((id) => {
     setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
-  };
+  }, []);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
+  }, []);
 
-  const clearAllNotifications = () => {
+  const clearAllNotifications = useCallback(() => {
     setNotifications([]);
-  };
+  }, []);
 
-  const dismissHealthTip = () => {
+  const dismissHealthTip = useCallback(() => {
     setHealthTip(null);
-  };
+  }, []);
 
   const getUnreadCount = () => {
     return notifications.filter(n => !n.read).length;
