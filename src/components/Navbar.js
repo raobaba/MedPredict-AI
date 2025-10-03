@@ -8,7 +8,7 @@ import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, logout, loading, switchRole } = useAuth();
+  const { user, logout, loading } = useAuth();
   const initials = user?.email ? user.email[0]?.toUpperCase() : "";
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -71,18 +71,6 @@ export default function Navbar() {
           {/* Auth Section */}
           {mounted && !loading && user ? (
             <div className="flex items-center gap-3">
-              {/* Role Switcher - Compact */}
-              <div className="flex items-center gap-2">
-                <select
-                  value={user.role}
-                  onChange={(e) => switchRole(e.target.value)}
-                  className="appearance-none bg-transparent border border-black/10 dark:border-white/15 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                >
-                  <option value="patient">Patient</option>
-                  <option value="doctor">Doctor</option>
-                </select>
-              </div>
-              
               {/* Profile Link */}
               <Link
                 href="/profile"
@@ -198,19 +186,6 @@ export default function Navbar() {
             {/* Auth Section */}
             {mounted && !loading && user ? (
               <div className="space-y-3">
-                {/* Role Switcher */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm opacity-70">Role:</span>
-                  <select
-                    value={user.role}
-                    onChange={(e) => switchRole(e.target.value)}
-                    className="bg-transparent border border-black/10 dark:border-white/15 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                  >
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
-                  </select>
-                </div>
-                
                 {/* Navigation Links */}
                 <Link href="/profile" className="block hover:underline" onClick={() => setOpen(false)}>
                   Profile

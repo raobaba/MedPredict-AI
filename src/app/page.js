@@ -66,8 +66,47 @@ const ArrowRightIcon = () => (
 );
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MedPredict AI",
+    "description": "Predictive healthcare analytics platform powered by AI",
+    "url": "https://medpredict.ai",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "29",
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "price": "29",
+        "priceCurrency": "USD",
+        "billingIncrement": "Monthly"
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "500"
+    },
+    "featureList": [
+      "Clinical Risk Prediction",
+      "Operational Forecasting", 
+      "Compliance & Security",
+      "Smart Alerts & Dashboards",
+      "API & Integrations",
+      "Privacy by Design"
+    ]
+  };
+
   return (
-    <div className="py-8 overflow-hidden">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="py-8 overflow-hidden">
       {/* Hero Section */}
       <section className="relative py-10">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 rounded-3xl"></div>
@@ -532,6 +571,7 @@ export default function Home() {
           </a>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

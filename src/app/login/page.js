@@ -104,6 +104,7 @@ export default function LoginPage() {
               <Input 
                 label="Email Address" 
                 type="email" 
+                name="email"
                 value={email} 
                 onChange={(e)=>{
                   setEmail(e.target.value);
@@ -148,6 +149,7 @@ export default function LoginPage() {
 
               <Select
                 label="Account Type"
+                name="role"
                 value={role}
                 onChange={(e)=>{
                   setRole(e.target.value);

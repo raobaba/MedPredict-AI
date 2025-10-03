@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import LoadingSpinner from "./LoadingSpinner";
 
 const base = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/20 disabled:opacity-50 disabled:pointer-events-none";
 
@@ -22,19 +23,29 @@ export default function Button({
   size = "md",
   className = "",
   href,
+  loading = false,
+  loadingText = "Loading...",
   ...props
 }) {
   const cls = `${base} ${variants[variant] ?? variants.primary} ${sizes[size] ?? sizes.md} ${className}`;
+  
+  const content = loading ? (
+    <>
+      <LoadingSpinner size="sm" className="mr-2" />
+      {loadingText}
+    </>
+  ) : children;
+
   if (href) {
     return (
       <Link href={href} className={cls} {...props}>
-        {children}
+        {content}
       </Link>
     );
   }
   return (
-    <button className={cls} {...props}>
-      {children}
+    <button className={cls} disabled={loading} {...props}>
+      {content}
     </button>
   );
 }
